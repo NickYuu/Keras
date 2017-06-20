@@ -76,6 +76,7 @@ train_history = model.fit(x=X_train,
                           batch_size=200,
                           verbose=2)
 
+
 show_train_history(train_history, 'acc', 'val_acc')
 show_train_history(train_history, 'loss', 'val_loss')
 

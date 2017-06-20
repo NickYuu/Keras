@@ -88,7 +88,6 @@ print(scores[1])
 # 進行預測
 prediction = model.predict_classes(X_test)
 
-
 df = pd.DataFrame({'label': y_test_lab, 'predict': prediction})
 error_prediction = df[(df.label == 5) & (df.label != df.predict)]
 error_index = error_prediction.index
@@ -97,7 +96,7 @@ print(error_prediction)
 plot_images_labels_prediction(X_test_img[error_index], y_test_lab[error_index], prediction[error_index], idx=1)
 
 # confusion matrix 混淆矩陣
-crosstab = pd.crosstab(y_test_lab, prediction, rownames='y_test', colnames='predict')
+crosstab = pd.crosstab(y_test_lab, prediction, rownames=['y_test'], colnames=['predict'])
 print()
 print(crosstab)
 
