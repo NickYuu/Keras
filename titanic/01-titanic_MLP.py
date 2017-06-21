@@ -109,6 +109,7 @@ all_Features, Label = preprocess_data(all_df)
 all_probability = model.predict(all_Features)
 data = all_df
 data.insert(len(all_df.columns), 'probability', all_probability)
+
 print(data[-2:])
 print('生存率很高卻沒生存')
 print(data[(data.survived == 0) & (data.probability > 0.9)])

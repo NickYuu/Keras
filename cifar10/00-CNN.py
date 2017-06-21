@@ -124,7 +124,7 @@ model.compile(optimizer='adam',
 train_history = model.fit(X_train_normalize,
                           y_trainOneHot,
                           batch_size=128,
-                          epochs=1,
+                          epochs=5,
                           verbose=2,
                           validation_split=0.2)
 
@@ -135,8 +135,8 @@ plot_model(model, to_file='model.png')
 '''
 評估模型準確率
 '''
-# show_train_history('acc', 'val_acc')
-# show_train_history('loss', 'val_loss')
+show_train_history('acc', 'val_acc')
+show_train_history('loss', 'val_loss')
 
 scores = model.evaluate(X_test_normalize, y_testOneHot, verbose=0)
 print()
