@@ -62,20 +62,20 @@ y_testOneHot = np_utils.to_categorical(y_test)
 model = Sequential()
 
 # 建立卷積層1 Convolutional Layer
-model.add(Conv2D(filters=16,  # 建立16個濾鏡
-                 kernel_size=(5, 5),  # 每個濾鏡 5 * 5 的大小
-                 padding='same',  # 產生的卷積影像大小不變
-                 input_shape=(28, 28, 1),  # 輸入的維度
-                 activation='relu'))  # 設定ReLU激活函數
+model.add(Conv2D(filters=16,                # 建立16個濾鏡
+                 kernel_size=(5, 5),        # 每個濾鏡 5 * 5 的大小
+                 padding='same',            # 產生的卷積影像大小不變
+                 input_shape=(28, 28, 1),   # 輸入的維度
+                 activation='relu'))        # 設定ReLU激活函數
 
 # 建立池化層1 Pooling Layer > 將原本 16 個 28*28 的影像轉換為 16 個 14*14
 model.add(MaxPool2D(pool_size=(2, 2)))
 
 # 建立卷積層2 Convolutional Layer > 將原本16個影像轉為 36個
-model.add(Conv2D(filters=36,  # 建立16個濾鏡
-                 kernel_size=(5, 5),  # 每個濾鏡 5 * 5 的大小
-                 padding='same',  # 產生的卷積影像大小不變
-                 activation='relu'))  # 設定ReLU激活函數
+model.add(Conv2D(filters=36,                # 建立16個濾鏡
+                 kernel_size=(5, 5),        # 每個濾鏡 5 * 5 的大小
+                 padding='same',            # 產生的卷積影像大小不變
+                 activation='relu'))        # 設定ReLU激活函數
 
 # 建立池化層2 Pooling Layer
 model.add(MaxPool2D(pool_size=(2, 2)))
