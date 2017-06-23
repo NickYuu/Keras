@@ -95,8 +95,22 @@ model.add(Conv2D(filters=64,
 model.add(Dropout(0.25))
 model.add(MaxPool2D(pool_size=(2, 2)))
 
+
+# 卷積層3 與 池化層3
+model.add(Conv2D(filters=128,
+                 kernel_size=(3, 3),
+                 padding='same',
+                 activation='relu'))
+model.add(Dropout(0.25))
+model.add(MaxPool2D(pool_size=(2, 2)))
+
+
 # 建立神經網路(平坦層、隱藏層、輸出層)
 model.add(Flatten())
+model.add(Dropout(0.25))
+
+model.add(Dense(units=2048,
+                activation='relu'))
 model.add(Dropout(0.25))
 
 model.add(Dense(units=1024,
@@ -123,14 +137,14 @@ model.compile(optimizer='adam',
 
 train_history = model.fit(X_train_normalize,
                           y_trainOneHot,
-                          batch_size=128,
-                          epochs=5,
+                          batch_size=300,
+                          epochs=1,
                           verbose=2,
                           validation_split=0.2)
 
 model.save_weights("SaveModel/cifarCnnModel.h5")
 print("Saved model to disk")
-plot_model(model, to_file='model.png')
+# plot_model(model, to_file='model.png')
 
 '''
 評估模型準確率
