@@ -119,8 +119,8 @@ train_history = model.fit(X_train4D, y_trainOneHot,
 """
 
 # 圖形化準確度及誤差
-show_train_history(train_history, 'acc', 'val_acc')
-show_train_history(train_history, 'loss', 'val_loss')
+show_train_history('acc', 'val_acc')
+show_train_history('loss', 'val_loss')
 
 # 評估模型
 scores = model.evaluate(X_test4D, y_testOneHot)
@@ -139,7 +139,7 @@ df = pd.DataFrame({'label': y_test,
 error_prediction = df[df.label != df.predict]
 index = error_prediction.index
 
-plot_images_labels_prediction(X_test[index], y_test[index], prediction[index], idx=0)
+plot_images_labels_prediction(X_test[index], y_test[index], idx=0)
 
 
 matrix = pd.crosstab(df.label, df.predict)
