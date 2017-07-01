@@ -110,7 +110,7 @@ model.compile(optimizer='adam',
 # 開始訓練
 train_history = model.fit(X_train4D, y_trainOneHot,
                           batch_size=300,
-                          epochs=10,
+                          epochs=5,
                           validation_split=0.2,
                           verbose=2)
 

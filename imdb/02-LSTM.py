@@ -85,6 +85,12 @@ print(model.summary())
 #
 # ==========================================================
 print('Training Model...')
+try:
+    model.load_weights("MLPModel.h5")
+    print("載入模型成功!繼續訓練模型")
+except:
+    print("載入模型失敗!開始訓練一個新模型")
+
 model.compile(optimizer='adam',
               loss='binary_crossentropy',
               metrics=['accuracy'])
@@ -94,6 +100,9 @@ model.fit(X_train, y_train,
           validation_split=0.2,
           epochs=2,
           verbose=2)
+
+model.save_weights("MLPModel.h5")
+print("模型保存成功")
 
 # ==========================================================
 #
