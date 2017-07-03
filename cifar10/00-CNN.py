@@ -149,8 +149,8 @@ print("Saved model to disk")
 '''
 評估模型準確率
 '''
-show_train_history('acc', 'val_acc')
-show_train_history('loss', 'val_loss')
+# show_train_history('acc', 'val_acc')
+# show_train_history('loss', 'val_loss')
 
 scores = model.evaluate(X_test_normalize, y_testOneHot, verbose=0)
 print()
@@ -160,21 +160,21 @@ print(scores[1])
 進行預測
 '''
 
-prediction = model.predict_classes(X_test_normalize)
-plot_images_labels_prediction(X_test, y_test, prediction, 0)
-
-df = pd.DataFrame({'label': y_test.reshape(-1), 'predict': prediction})
-index = df[df.label != df.predict].index
-plot_images_labels_prediction(X_test[index], y_test[index], prediction[index], 0)
-
-Predicted_Probability = model.predict(X_test_normalize)
-show_predicted_probability(Predicted_Probability, 0)
+# prediction = model.predict_classes(X_test_normalize)
+# plot_images_labels_prediction(X_test, y_test, prediction, 0)
+#
+# df = pd.DataFrame({'label': y_test.reshape(-1), 'predict': prediction})
+# index = df[df.label != df.predict].index
+# plot_images_labels_prediction(X_test[index], y_test[index], prediction[index], 0)
+#
+# Predicted_Probability = model.predict(X_test_normalize)
+# show_predicted_probability(Predicted_Probability, 0)
 
 
 '''
 confusion matrix 混淆矩陣
 '''
 
-matrix = pd.crosstab(df.label, df.predict)
-print()
-print(matrix)
+# matrix = pd.crosstab(df.label, df.predict)
+# print()
+# print(matrix)
