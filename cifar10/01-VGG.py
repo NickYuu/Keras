@@ -156,7 +156,7 @@ model.add(Dense(units=2048,
                 activation='relu'))
 model.add(Dropout(0.3))
 
-model.add(Dense(units=1024,
+model.add(Dense(units=2048,
                 activation='relu'))
 model.add(Dropout(0.3))
 
@@ -231,7 +231,7 @@ model.compile(optimizer='adam',
 
 train_history = model.fit(X_train_normalize,
                           y_trainOneHot,
-                          batch_size=32,
+                          batch_size=256,
                           epochs=1,
                           verbose=2,
                           validation_split=0.2)
