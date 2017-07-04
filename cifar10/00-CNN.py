@@ -125,6 +125,7 @@ print(model.summary())
 '''
 訓練模型
 '''
+# noinspection PyBroadException
 try:
     model.load_weights("SaveModel/cifarCnnModel.h5")
     print("載入模型成功!繼續訓練模型")
