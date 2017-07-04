@@ -7,14 +7,14 @@
 @software: PyCharm
 @since:python 3.6.0 on 2017/7/4
 """
-import keras
 from keras.datasets import cifar10
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D
-from keras.optimizers import SGD
+from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D, Convolution2D
+from keras.utils import np_utils
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import os
 
 # ==========================================================
@@ -44,6 +44,36 @@ def show_train_history(history, train, validation):
     plt.show()
 
 
+def plot_images_labels_prediction(images, labels, prediction, idx, num=10):
+    plt.figure()
+    if num > 25:
+        num = 25
+
+    for i in range(0, num):
+        ax = plt.subplot(5, 5, 1 + i)
+        ax.imshow(images[idx], cmap='binary')
+
+        title = str(i) + ',' + label_dict[labels[i][0]]
+        if len(prediction) > 0:
+            title += '=>' + label_dict[prediction[i]]
+
+        ax.set_title(title, fontsize=10)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        idx += 1
+    plt.show()
+
+
+def show_predicted_probability(predicted__probability, i):
+    print('label:', label_dict[y_test[i][0]],
+          'predict:', label_dict[prediction[i]])
+    plt.figure(figsize=(2, 2))
+    plt.imshow(np.reshape(X_test[i], (32, 32, 3)))
+    plt.show()
+    for j in range(10):
+        print(label_dict[j] + ' Probability:%1.9f' % (predicted__probability[i][j]))
+
+
 # ==========================================================
 #
 # 資料預處理
@@ -63,12 +93,66 @@ label_dict = {0: "airplane",
               8: "ship",
               9: "truck"}
 
+# X normalize
+X_train_normalize = X_train.astype('float32') / 255
+X_test_normalize = X_test.astype('float32') / 255
+
+# y OneHot Encoding
+y_trainOneHot = np_utils.to_categorical(y_train)
+y_testOneHot = np_utils.to_categorical(y_test)
+
 # ==========================================================
 #
 # 建立模型
 #
 # ==========================================================
 print('Build model...')
+
+model = Sequential()
+model.add(ZeroPadding2D((1, 1), input_shape=(32, 32, 3)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+model.add(Flatten())
+model.add(Dense(4096, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(4096, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(10, activation='softmax'))
+
+model.summary()
 
 # ==========================================================
 #
@@ -77,12 +161,42 @@ print('Build model...')
 # ==========================================================
 print('Training Model...')
 
+# noinspection PyBroadException
+try:
+    model.load_weights("SaveModel/VGGModel.h5")
+    print("載入模型成功!繼續訓練模型")
+except:
+    print("載入模型失敗!開始訓練一個新模型")
+
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+train_history = model.fit(X_train_normalize,
+                          y_trainOneHot,
+                          batch_size=300,
+                          epochs=1,
+                          verbose=2,
+                          validation_split=0.2)
+
+model.save_weights("SaveModel/VGGModel.h5")
+print("Saved model to disk")
+
+
 # ==========================================================
 #
 # 評估模型準確率
 #
 # ==========================================================
 print('Evaluate Model...')
+
+# show_train_history('acc', 'val_acc')
+# show_train_history('loss', 'val_loss')
+
+scores = model.evaluate(X_test_normalize, y_testOneHot, verbose=0)
+print()
+print(scores[1])
+
 
 # ==========================================================
 #
@@ -91,37 +205,16 @@ print('Evaluate Model...')
 # ==========================================================
 print('Predict...')
 
+prediction = model.predict_classes(X_test_normalize)
+plot_images_labels_prediction(X_test, y_test, prediction, 0)
+
+df = pd.DataFrame({'label': y_test.reshape(-1), 'predict': prediction})
+index = df[df.label != df.predict].index
+plot_images_labels_prediction(X_test[index], y_test[index], prediction[index], 0)
+
+Predicted_Probability = model.predict(X_test_normalize)
+show_predicted_probability(Predicted_Probability, 0)
 
 
 
-# Generate dummy data
-x_train = np.random.random((100, 100, 100, 3))
-y_train = keras.utils.to_categorical(np.random.randint(10, size=(100, 1)), num_classes=10)
-x_test = np.random.random((20, 100, 100, 3))
-y_test = keras.utils.to_categorical(np.random.randint(10, size=(20, 1)), num_classes=10)
 
-model = Sequential()
-# input: 100x100 images with 3 channels -> (100, 100, 3) tensors.
-# this applies 32 convolution filters of size 3x3 each.
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(100, 100, 3)))
-model.add(Conv2D(32, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
-model.add(Flatten())
-model.add(Dense(256, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
-
-model.summary()
-
-# sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-# model.compile(loss='categorical_crossentropy', optimizer='adam')
-#
-# model.fit(x_train, y_train, batch_size=32, epochs=10)
-# score = model.evaluate(x_test, y_test, batch_size=32)
