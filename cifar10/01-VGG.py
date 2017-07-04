@@ -129,21 +129,21 @@ model.add(ZeroPadding2D((1, 1)))
 model.add(Conv2D(256, (3, 3), activation='relu'))
 model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(512, (3, 3), activation='relu'))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(512, (3, 3), activation='relu'))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(512, (3, 3), activation='relu'))
+# model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+#
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(512, (3, 3), activation='relu'))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(512, (3, 3), activation='relu'))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(512, (3, 3), activation='relu'))
+# model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
 model.add(Flatten())
 model.add(Dense(4096, activation='relu'))
@@ -174,7 +174,7 @@ model.compile(optimizer='adam',
 
 train_history = model.fit(X_train_normalize,
                           y_trainOneHot,
-                          batch_size=300,
+                          batch_size=32,
                           epochs=1,
                           verbose=2,
                           validation_split=0.2)
