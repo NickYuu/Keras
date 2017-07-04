@@ -10,7 +10,7 @@
 from keras.datasets import cifar10
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D, Convolution2D
+from keras.layers import Conv2D, MaxPool2D, MaxPooling2D, ZeroPadding2D, Convolution2D
 from keras.utils import np_utils
 import matplotlib.pyplot as plt
 import numpy as np
@@ -108,27 +108,84 @@ y_testOneHot = np_utils.to_categorical(y_test)
 # ==========================================================
 print('Build model...')
 
+
 model = Sequential()
-model.add(ZeroPadding2D((1, 1), input_shape=(32, 32, 3)))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(128, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(128, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+# 卷積層1 與 池化層1
+model.add(Conv2D(filters=64,
+                 kernel_size=(3, 3),
+                 padding='same',
+                 input_shape=(32, 32, 3),
+                 activation='relu'))
+model.add(Conv2D(filters=64,
+                 kernel_size=(3, 3),
+                 padding='same',
+                 input_shape=(32, 32, 3),
+                 activation='relu'))
+model.add(MaxPool2D(pool_size=(2, 2)))
 
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+# 卷積層2 與 池化層2
+model.add(Conv2D(filters=128,
+                 kernel_size=(3, 3),
+                 padding='same',
+                 activation='relu'))
+model.add(Conv2D(filters=128,
+                 kernel_size=(3, 3),
+                 padding='same',
+                 activation='relu'))
+model.add(MaxPool2D(pool_size=(2, 2)))
 
+
+# 卷積層3 與 池化層3
+model.add(Conv2D(filters=256,
+                 kernel_size=(3, 3),
+                 padding='same',
+                 activation='relu'))
+model.add(Conv2D(filters=256,
+                 kernel_size=(3, 3),
+                 padding='same',
+                 activation='relu'))
+model.add(MaxPool2D(pool_size=(2, 2)))
+
+
+# 建立神經網路(平坦層、隱藏層、輸出層)
+model.add(Flatten())
+model.add(Dropout(0.3))
+
+model.add(Dense(units=2048,
+                activation='relu'))
+model.add(Dropout(0.3))
+
+model.add(Dense(units=1024,
+                activation='relu'))
+model.add(Dropout(0.3))
+
+model.add(Dense(units=10,
+                activation='softmax'))
+
+
+
+# model = Sequential()
+# model.add(ZeroPadding2D((1, 1), input_shape=(32, 32, 3)))
+# model.add(Conv2D(64, (3, 3), activation='relu'))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(64, (3, 3), activation='relu'))
+# model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+#
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(128, (3, 3), activation='relu'))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(128, (3, 3), activation='relu'))
+# model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+#
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(256, (3, 3), activation='relu'))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(256, (3, 3), activation='relu'))
+# model.add(ZeroPadding2D((1, 1)))
+# model.add(Conv2D(256, (3, 3), activation='relu'))
+# model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+#
 # model.add(ZeroPadding2D((1, 1)))
 # model.add(Conv2D(512, (3, 3), activation='relu'))
 # model.add(ZeroPadding2D((1, 1)))
@@ -144,13 +201,13 @@ model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 # model.add(ZeroPadding2D((1, 1)))
 # model.add(Conv2D(512, (3, 3), activation='relu'))
 # model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-model.add(Flatten())
-model.add(Dense(4096, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(4096, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
+#
+# model.add(Flatten())
+# model.add(Dense(4096, activation='relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(4096, activation='relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(10, activation='softmax'))
 
 model.summary()
 
