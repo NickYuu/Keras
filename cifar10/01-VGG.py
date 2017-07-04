@@ -150,15 +150,14 @@ model.add(MaxPool2D(pool_size=(2, 2)))
 
 # 建立神經網路(平坦層、隱藏層、輸出層)
 model.add(Flatten())
-model.add(Dropout(0.3))
 
-model.add(Dense(units=2048,
+model.add(Dense(units=4096,
                 activation='relu'))
-model.add(Dropout(0.3))
+model.add(Dropout(0.5))
 
-model.add(Dense(units=2048,
+model.add(Dense(units=4096,
                 activation='relu'))
-model.add(Dropout(0.3))
+model.add(Dropout(0.5))
 
 model.add(Dense(units=10,
                 activation='softmax'))
@@ -232,7 +231,7 @@ model.compile(optimizer='adam',
 train_history = model.fit(X_train_normalize,
                           y_trainOneHot,
                           batch_size=256,
-                          epochs=1,
+                          epochs=3,
                           verbose=2,
                           validation_split=0.2)
 
@@ -250,9 +249,9 @@ print('Evaluate Model...')
 # show_train_history('acc', 'val_acc')
 # show_train_history('loss', 'val_loss')
 
-scores = model.evaluate(X_test_normalize, y_testOneHot, verbose=0)
-print()
-print(scores[1])
+# scores = model.evaluate(X_test_normalize, y_testOneHot, verbose=0)
+# print()
+# print(scores[1])
 
 
 # ==========================================================
@@ -262,15 +261,15 @@ print(scores[1])
 # ==========================================================
 print('Predict...')
 
-prediction = model.predict_classes(X_test_normalize)
-plot_images_labels_prediction(X_test, y_test, prediction, 0)
-
-df = pd.DataFrame({'label': y_test.reshape(-1), 'predict': prediction})
-index = df[df.label != df.predict].index
-plot_images_labels_prediction(X_test[index], y_test[index], prediction[index], 0)
-
-Predicted_Probability = model.predict(X_test_normalize)
-show_predicted_probability(Predicted_Probability, 0)
+# prediction = model.predict_classes(X_test_normalize)
+# plot_images_labels_prediction(X_test, y_test, prediction, 0)
+#
+# df = pd.DataFrame({'label': y_test.reshape(-1), 'predict': prediction})
+# index = df[df.label != df.predict].index
+# plot_images_labels_prediction(X_test[index], y_test[index], prediction[index], 0)
+#
+# Predicted_Probability = model.predict(X_test_normalize)
+# show_predicted_probability(Predicted_Probability, 0)
 
 
 
