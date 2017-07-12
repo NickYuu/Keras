@@ -12,6 +12,7 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense, Dropout, Embedding
 from keras.preprocessing import sequence
 import matplotlib.pyplot as plt
+import pandas as pd
 import numpy as np
 import os
 
@@ -43,6 +44,13 @@ def show_train_history(history, train, validation):
     plt.show()
 
 
+def display_test_Sentiment(i):
+    SentimentDict = {1: '正面的', 0: '負面的'}
+    print(X_test[i])
+    print('標籤label:', SentimentDict[y_test[i]],
+          '預測結果:', SentimentDict[predict[i, 0]])
+
+
 # ==========================================================
 #
 # 資料預處理
@@ -53,7 +61,6 @@ print('Loading data...')
 
 X_train = sequence.pad_sequences(X_train, maxlen=400)
 X_test = sequence.pad_sequences(X_test, maxlen=400)
-
 
 # ==========================================================
 #
@@ -121,4 +128,8 @@ print(scores[1])
 #
 # ==========================================================
 print('Predict...')
-
+predict = model.predict_classes(X_test)
+df = pd.DataFrame({'label': y_test, 'predict': predict.reshape(-1)})
+index = df[df.label != df.predict].index
+print('\n')
+display_test_Sentiment(index[6])
