@@ -231,7 +231,7 @@ model.compile(optimizer='adam',
 train_history = model.fit(X_train_normalize,
                           y_trainOneHot,
                           batch_size=256,
-                          epochs=3,
+                          epochs=5,
                           verbose=2,
                           validation_split=0.2)
 
